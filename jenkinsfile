@@ -4,26 +4,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Clone your repo (change URL & branch accordingly)
-                git branch: 'main', url: 'https://github.com/Anjalirajaramker/htmlpage.git'
+                // Jenkins automatically checks out the repo when using Pipeline script from SCM,
+                // so you usually don't need an explicit git step here.
+                echo 'Code checked out automatically.'
             }
         }
 
         stage('Build') {
             steps {
-                // For a simple HTML page, no build step is necessary
-                echo 'No build required for static HTML page.'
+                echo 'Build step: For static HTML, no build needed.'
             }
         }
 
         stage('Test') {
             steps {
                 script {
-                    // Verify index.html file exists in workspace
                     if (!fileExists('index.html')) {
-                        error 'index.html not found in repo!'
+                        error "index.html not found!"
                     } else {
-                        echo 'index.html found, test passed.'
+                        echo "index.html found, test passed."
                     }
                 }
             }
@@ -31,7 +30,6 @@ pipeline {
 
         stage('Archive') {
             steps {
-                // Archive your HTML file as build artifact
                 archiveArtifacts artifacts: 'index.html', fingerprint: true
             }
         }
