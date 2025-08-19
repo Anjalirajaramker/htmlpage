@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clone your repo (change URL & branch accordingly)
+                git branch: 'main', url: 'https://github.com/Anjalirajaramker/htmlpage.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // For a simple HTML page, no build step is necessary
+                echo 'No build required for static HTML page.'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    // Verify index.html file exists in workspace
+                    if (!fileExists('index.html')) {
+                        error 'index.html not found in repo!'
+                    } else {
+                        echo 'index.html found, test passed.'
+                    }
+                }
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                // Archive your HTML file as build artifact
+                archiveArtifacts artifacts: 'index.html', fingerprint: true
+            }
+        }
+    }
+}
